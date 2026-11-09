@@ -683,6 +683,8 @@ body:has(dialog[open]){overflow:hidden}
 .ticks--sm li::before{width:16px;height:16px;margin-top:2px}
 .dur{font-weight:600;color:var(--gold)}
 .card .buy{padding-top:4px}
+.prog__act{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:auto;padding-top:6px}
+.prog__act .more{margin-top:0}
 
 /* Твикс: четыре варианта в одной карточке */
 .variants{display:flex;flex-direction:column;gap:8px}

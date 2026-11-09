@@ -1,0 +1,88 @@
+.program-page .hero__content{gap:20px}
+.program-page .h1--caps{font-size:48px}
+.program-page .hero .visual{min-height:610px}
+.program-page .visual>img{filter:saturate(.78)}
+.program-page .stats b{font-size:25px}
+.program-page .logo img{width:150px;height:46px;object-fit:contain}
+.photo-tile{padding:0;overflow:hidden;background:#fff}
+.photo-tile__img,.result__photo,.panel__photo{overflow:hidden;background:var(--mint)}
+.photo-tile__img{aspect-ratio:16/9}
+.photo-tile__img img,.result__photo img,.panel__photo img,.other-card .card__img img,.program-faq__visual>img,.order__photo>img{width:100%;height:100%;object-fit:cover;filter:saturate(.76) brightness(.9);transition:transform .45s ease,filter .3s ease}
+.photo-tile:hover img,.result--photo:hover img,.other-card:hover .card__img img{transform:scale(1.025);filter:saturate(.86) brightness(.96)}
+.photo-tile__body{display:flex;flex-direction:column;gap:10px;padding:22px}
+.photo-tile__body p{color:var(--ink)}
+.photo-tile__body .tile__icon{flex:none;margin-bottom:4px}
+.ritual{position:relative;background:radial-gradient(120% 100% at 50% 0,#684a35,#352116 76%);padding:72px 0;color:var(--beige)}
+.ritual::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,rgba(196,174,140,.08),transparent 40%)}
+.ritual>.wrap{position:relative}
+.ritual .tag{color:var(--gold-l)}
+.ritual .lead{color:var(--beige)}
+.ritual__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:32px}
+.ritual-card{position:relative;min-height:500px;border:1px solid rgba(196,174,140,.42);border-radius:26px;overflow:hidden;background:var(--brown);box-shadow:0 24px 54px -30px rgba(0,0,0,.7)}
+.ritual-card>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.68) brightness(.78);transition:transform .5s ease,filter .3s ease}
+.ritual-card:hover>img{transform:scale(1.035);filter:saturate(.8) brightness(.86)}
+.ritual-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(35,22,14,.08) 20%,rgba(35,22,14,.94) 100%)}
+.ritual-card__num{position:absolute;z-index:1;top:20px;left:20px;padding:8px 12px;border-radius:999px;background:rgba(242,239,234,.16);backdrop-filter:blur(8px);color:#fff;font:600 11px/1.2 var(--f-text);letter-spacing:.12em;text-transform:uppercase}
+.ritual-card__body{position:absolute;z-index:1;left:0;right:0;bottom:0;display:flex;flex-direction:column;gap:12px;padding:26px}
+.ritual-card__body h3{color:#fff;font-size:25px;line-height:1.2}
+.ritual-card__body p{color:var(--beige);font-size:14px;line-height:1.55}
+.ritual-card__body span{color:var(--gold-l);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.result--photo{display:block;padding:0;overflow:hidden;border:1px solid var(--mint)}
+.result__photo{height:210px}
+.result__body{padding:22px}
+.result__body h3{margin:0 0 10px}
+.result__body p{font-size:14px}
+.program-price .panel--photo{padding:0;overflow:hidden}
+.program-price .panel__photo{height:240px}
+.program-price .panel__body{display:flex;flex-direction:column;gap:14px;flex:1;padding:26px}
+.program-price .panel__body .row{margin-top:auto;padding-top:8px}
+.program-price__value{font:500 38px/1.1 var(--f-head);color:var(--teal)}
+.other-card{border:1px solid var(--mint);background:#fff;box-shadow:0 18px 44px -34px rgba(87,55,34,.55)}
+.other-card .card__img{aspect-ratio:4/3}
+.other-card .card__body{padding:22px}
+.other-card .buy{padding-top:8px}
+.other-card .prog__act{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-top:auto}
+.other-card .prog__act .more{font-size:13px;letter-spacing:.04em}
+.program-faq__layout{display:grid;grid-template-columns:minmax(280px,.8fr) minmax(0,1.2fr);gap:24px;align-items:start}
+.program-faq__visual{position:sticky;top:24px;min-height:500px;border-radius:24px;overflow:hidden;background:var(--brown)}
+.program-faq__visual>img{position:absolute;inset:0;filter:saturate(.62) brightness(.72)}
+.program-faq__visual::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 28%,rgba(53,33,22,.9))}
+.program-faq__visual figcaption{position:absolute;z-index:1;left:26px;right:26px;bottom:26px;display:flex;flex-direction:column;align-items:flex-start;gap:12px;color:#fff}
+.program-faq__visual figcaption b{font:600 30px/1.15 var(--f-head)}
+.program-faq__visual figcaption span{font-size:14px;line-height:1.55;color:var(--beige)}
+.program-faq__visual .more{color:var(--gold-l)}
+.order__photo{position:relative;height:190px;border-radius:20px;overflow:hidden;margin-top:4px}
+.order__photo>img{position:absolute;inset:0;filter:saturate(.62) brightness(.76)}
+.order__photo figcaption{position:absolute;left:18px;right:18px;bottom:18px;padding:12px 16px;border-radius:14px;background:rgba(242,239,234,.94);color:var(--brown);font-size:13px}
+.program-contacts .panel--photo{padding:0;overflow:hidden}
+.program-contacts .panel__photo{height:220px}
+.program-contacts .panel__body{display:flex;flex-direction:column;align-items:flex-start;gap:16px;padding:24px}
+.program-contacts .panel__body .row{margin-top:auto}
+@media (max-width:1100px){
+  .program-page .h1--caps{font-size:42px}
+  .program-page .hero .visual{min-height:440px}
+  .ritual__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ritual-card:last-child:nth-child(odd){grid-column:1/-1;min-height:420px}
+  .program-faq__layout{grid-template-columns:1fr}
+  .program-faq__visual{position:relative;top:auto;min-height:340px}
+}
+@media (max-width:600px){
+  .program-page .h1--caps{font-size:32px}
+  .program-page .hero{padding-top:28px;padding-bottom:40px}
+  .program-page .hero .visual{min-height:350px}
+  .program-page .stats{display:grid;grid-template-columns:1fr}
+  .program-page .stats b{font-size:25px}
+  .ritual{padding:52px 0}
+  .ritual__grid{grid-template-columns:1fr;gap:16px}
+  .ritual-card,.ritual-card:last-child:nth-child(odd){grid-column:auto;min-height:460px}
+  .ritual-card__body{padding:24px}
+  .result__photo{height:210px}
+  .program-price .panel__photo,.program-contacts .panel__photo{height:200px}
+  .program-price__value{font-size:34px}
+  .program-faq__visual{min-height:310px}
+  .program-faq__visual figcaption{left:22px;right:22px;bottom:22px}
+  .order__photo{height:170px}
+}
+@media (prefers-reduced-motion:reduce){
+  .photo-tile__img img,.result__photo img,.other-card .card__img img,.ritual-card>img{transition:none}
+}
