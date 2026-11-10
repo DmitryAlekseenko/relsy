@@ -376,8 +376,10 @@ document.querySelectorAll('[data-form]').forEach((form) => {
   const fmt = (n) => Number(n).toLocaleString('ru-RU').replace(/\u00a0/g, ' ') + ' ₽';
   const txt = (el) => (el ? el.textContent.replace(/\s+/g, ' ').replace(/\s*→$/, '').trim() : '');
 
-  // что выбрал гость: строки для окна, текст в поле «Пожелания», студия
+  // что выбрал клиент: строки для окна, текст в поле «Пожелания», студия
   function context(a) {
+    const question = a.closest('[data-wish]');
+    if (question) return { rows: [], wish: question.dataset.wish };
     const tag = a.closest('[data-book]');
     if (tag) return { rows: [[tag.dataset.book, tag.dataset.price || '']], wish: `Программа: ${tag.dataset.book}` };
     const b = a.closest('[data-builder]');
@@ -410,6 +412,8 @@ document.querySelectorAll('[data-form]').forEach((form) => {
   }
 
   function open(a) {
+    const title = dlg.querySelector('#book-title');
+    if (title) title.textContent = a.dataset.bookingTitle || 'Запись на сеанс';
     const c = context(a);
     form.elements.wish.value = c.wish || '';
     if (/Ленин/.test(c.place || '')) form.elements.studio.selectedIndex = 0;
