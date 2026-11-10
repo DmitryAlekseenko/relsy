@@ -373,11 +373,17 @@ document.querySelectorAll('[data-form]').forEach((form) => {
   const form = dlg.querySelector('[data-form]');
   const box = dlg.querySelector('[data-book-sel]');
   const list = dlg.querySelector('[data-book-list]');
+  const planBox = dlg.querySelector('[data-abon-plan]');
+  const planSelect = form.elements.sessions;
+  let plans = [];
+  let planLabel = '';
   const fmt = (n) => Number(n).toLocaleString('ru-RU').replace(/\u00a0/g, ' ') + ' ₽';
   const txt = (el) => (el ? el.textContent.replace(/\s+/g, ' ').replace(/\s*→$/, '').trim() : '');
 
-  // что выбрал гость: строки для окна, текст в поле «Пожелания», студия
+  // что выбрал клиент: строки для окна, текст в поле «Пожелания», студия
   function context(a) {
+    const question = a.closest('[data-wish]');
+    if (question) return { rows: [], wish: question.dataset.wish };
     const tag = a.closest('[data-book]');
     if (tag) return { rows: [[tag.dataset.book, tag.dataset.price || '']], wish: tag.dataset.wish || `Программа: ${tag.dataset.book}`, title: tag.dataset.title };
     const ct = a.closest('[data-cert]');
@@ -415,8 +421,10 @@ document.querySelectorAll('[data-form]').forEach((form) => {
     }
     const pc = a.closest('.price-card');
     if (pc) {
-      const label = `Абонемент ${txt(pc.querySelector('h3'))}, 6 сеансов`;
-      return { rows: [[label, txt(pc.querySelector(':scope > b'))]], wish: `${label} (количество сеансов можно изменить)`, title: 'Заявка на абонемент' };
+      const planLabel = `Абонемент ${txt(pc.querySelector('h3'))}`;
+      const plans = [...pc.querySelectorAll('dl > div')].map((row) => [txt(row.querySelector('dt')), txt(row.querySelector('dd'))]);
+      const label = `${planLabel}: ${plans[0][0]}`;
+      return { rows: [[label, plans[0][1]]], wish: label, title: 'Заявка на абонемент', plans, planLabel };
     }
     const panel = a.closest('#contacts .panel');
     if (panel) return { rows: [], wish: '', place: txt(panel.querySelector('h3')) };
@@ -425,11 +433,16 @@ document.querySelectorAll('[data-form]').forEach((form) => {
 
   function open(a) {
     const c = context(a);
-    const ttl = document.getElementById('book-title');
-    if (ttl) ttl.textContent = c.title || 'Запись на сеанс';
+    const title = dlg.querySelector('#book-title');
+    if (title) title.textContent = c.title || a.dataset.bookingTitle || 'Запись на сеанс';
     form.elements.wish.value = c.wish || '';
     if (/Ленин/.test(c.place || '')) form.elements.studio.selectedIndex = 0;
     if (/Игнатьев/.test(c.place || '')) form.elements.studio.selectedIndex = 1;
+    plans = c.plans || [];
+    planLabel = c.planLabel || '';
+    planBox.hidden = !plans.length;
+    planSelect.innerHTML = '';
+    plans.forEach(([sessions, price]) => planSelect.add(new Option(`${sessions} — ${price}`, sessions)));
     list.innerHTML = '';
     c.rows.forEach(([label, price, cls]) => {
       const li = document.createElement('li');
@@ -445,6 +458,15 @@ document.querySelectorAll('[data-form]').forEach((form) => {
     if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
     form.elements.name.focus();
   }
+
+  planSelect.addEventListener('change', () => {
+    const [sessions, price] = plans[planSelect.selectedIndex];
+    const label = `${planLabel}: ${sessions}`;
+    form.elements.wish.value = label;
+    const row = list.querySelector('li');
+    row.querySelector('span').textContent = label;
+    row.querySelector('b').textContent = price;
+  });
 
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href="#order"]');
