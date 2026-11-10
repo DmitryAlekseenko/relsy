@@ -504,6 +504,8 @@ legend small{font:500 13px/1 var(--f-text);color:var(--mint);margin-left:8px;tex
 .card__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .card{min-height:0}
 [data-filter-target]{grid-auto-rows:1fr}
+.card__body>.buy{margin-top:0}
+.card__body>.buy:last-child{margin-top:auto}
 
 /* без эффекта блеска на кнопках */
 .btn::after{content:none;display:none}
@@ -1251,3 +1253,17 @@ body:has(dialog[open]){overflow:hidden}
  .photo-tile__img img,.panel__photo img,.other-card .card__img img,.tw-finder__result>img,.tw-finder .pk__opt,.tw-finder .pk__dot{transition:none}
  .tw-finder .pk__q.is-on,.tw-finder__done,.tw-finder__intro,.tw-finder__found{animation:none}
 }
+
+
+.prog__act,.other-card .prog__act{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;width:100%;margin-top:auto;padding-top:6px}
+.prog__act .more,.other-card .prog__act .more{margin-top:0;font-size:13px;letter-spacing:.04em}
+#certificates .hero__content header{display:flex;flex-direction:column;gap:12px}
+#certificates .hero__content header .h2{margin-top:0}
+.faq-feedback{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:24px;padding:26px;border:1px solid var(--mint);border-radius:22px;background:#fff}
+.faq-feedback h3{margin:8px 0 10px;font:500 25px/1.2 var(--f-head);color:var(--teal)}
+.faq-feedback p:not(.tag){margin:0;max-width:720px;font-size:14px;line-height:1.6;color:var(--gray)}
+.faq-feedback .btn{flex:none}
+.order__photo figcaption{display:flex;flex-direction:column;gap:6px;line-height:1.35}
+.order__photo figcaption span{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.order__photo figcaption b{font:500 20px/1.25 var(--f-head);color:var(--teal)}
+@media (max-width:600px){.faq-feedback{align-items:stretch;flex-direction:column;padding:22px}.faq-feedback .btn{justify-content:center}.order__photo figcaption b{font-size:18px}}
