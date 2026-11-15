@@ -100,7 +100,7 @@ document.querySelectorAll('[data-filter]').forEach((bar) => {
   update();
 })();
 
-/* ── Форма заявки: маска телефона и проверка ── */
+/* ── Форма заявки: маска телефона, проверка и передача в WhatsApp ── */
 document.querySelectorAll('[data-form]').forEach((form) => {
   const phone = form.elements.phone;
 
@@ -114,20 +114,52 @@ document.querySelectorAll('[data-form]').forEach((form) => {
       (p[1] ? ` ${p[1]}` : '') + (p[2] ? `-${p[2]}` : '') + (p[3] ? `-${p[3]}` : '');
   });
 
+  form.addEventListener('input', (e) => e.target.removeAttribute('aria-invalid'));
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const status = form.querySelector('.form__status');
-    const agree = form.querySelector('.agree input');
-    const ok = form.elements.name.value.trim() && phone.value.replace(/\D/g, '').length === 11 && agree.checked;
+    const name = form.elements.name;
+    const agree = form.elements.consent;
+    const nameOk = Boolean(name.value.trim());
+    const phoneOk = phone.value.replace(/\D/g, '').length === 11;
+    const ok = nameOk && phoneOk && agree.checked;
+
+    name.setAttribute('aria-invalid', String(!nameOk));
+    phone.setAttribute('aria-invalid', String(!phoneOk));
+    agree.setAttribute('aria-invalid', String(!agree.checked));
     status.hidden = false;
-    form.dataset.sent = ok ? '1' : '';
-    status.textContent = ok
-      ? 'Спасибо! Администратор свяжется с вами в течение 5 минут.'
-      : 'Укажите имя, телефон полностью и подтвердите согласие.';
-    // здесь подключается отправка на сервер: fetch('/api/order', { method: 'POST', body: new FormData(form) })
-    // форма в модальном окне закрывается сама после успешной отправки
-    const dlg = form.closest('dialog');
-    if (ok && dlg) setTimeout(() => dlg.close(), 2500);
+
+    if (!ok) {
+      status.textContent = 'Укажите имя, телефон полностью и подтвердите согласие.';
+      const firstInvalid = !nameOk ? name : !phoneOk ? phone : agree;
+      firstInvalid.focus();
+      return;
+    }
+
+    const studio = form.elements.studio.value;
+    const recipient = /Игнатьев/.test(studio) ? '79248403911' : '79294909911';
+    const viaLabels = { call: 'позвонить', wa: 'WhatsApp', tg: 'Telegram' };
+    const via = form.elements.via.value;
+    const wish = form.elements.wish.value.trim() || 'Нужна помощь с выбором абонемента';
+    const message = [
+      'Здравствуйте! Хочу оставить заявку на абонемент на массаж.',
+      `Имя: ${name.value.trim()}`,
+      `Телефон: ${phone.value}`,
+      `Предпочтительная связь: ${viaLabels[via]}`,
+      `Студия: ${studio}`,
+      `Выбор или вопрос: ${wish}`
+    ].join('\n');
+    const url = `https://wa.me/${recipient}?text=${encodeURIComponent(message)}`;
+
+    status.replaceChildren('Заявка подготовлена. Проверьте сообщение и нажмите «Отправить» в WhatsApp. ');
+    const retry = document.createElement('a');
+    retry.className = 'text-link';
+    retry.href = url;
+    retry.target = '_blank';
+    retry.rel = 'noopener';
+    retry.textContent = 'Открыть WhatsApp ещё раз';
+    status.appendChild(retry);
+    window.open(url, '_blank', 'noopener,noreferrer');
   });
 });
 
@@ -416,8 +448,8 @@ document.querySelectorAll('[data-form]').forEach((form) => {
     const ab = a.closest('[data-abon]');
     if (ab) {
       const s = abonState(ab);
-      const rows = [[`Сеанс ${s.minutes} минут`, ''], [`${s.n} сеансов, скидка ${s.pct}%`, fmt(s.total)], ['Цена за сеанс', fmt(s.per)], ['Итого', fmt(s.total), 'is-total']];
-      return { rows, wish: `Абонемент: ${s.minutes} минут, ${s.n} сеансов, итого ${fmt(s.total)}`, title: 'Заявка на абонемент' };
+      const rows = [[`${s.kindLabel}: ${s.minutes} минут`, ''], [`${s.n} сеансов, скидка ${s.pct}%`, fmt(s.total)], ['Цена за сеанс', fmt(s.per)], ['Итого', fmt(s.total), 'is-total']];
+      return { rows, wish: `${s.kindLabel} абонемент: ${s.minutes} минут, ${s.n} сеансов, итого ${fmt(s.total)}`, title: 'Заявка на абонемент' };
     }
     const pc = a.closest('.price-card');
     if (pc) {
@@ -434,7 +466,7 @@ document.querySelectorAll('[data-form]').forEach((form) => {
   function open(a) {
     const c = context(a);
     const title = dlg.querySelector('#book-title');
-    if (title) title.textContent = c.title || a.dataset.bookingTitle || 'Запись на сеанс';
+    if (title) title.textContent = c.title || a.dataset.bookingTitle || 'Заявка на абонемент на массаж';
     form.elements.wish.value = c.wish || '';
     if (/Ленин/.test(c.place || '')) form.elements.studio.selectedIndex = 0;
     if (/Игнатьев/.test(c.place || '')) form.elements.studio.selectedIndex = 1;
@@ -476,10 +508,6 @@ document.querySelectorAll('[data-form]').forEach((form) => {
   });
   dlg.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', () => dlg.close()));
   dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); }); // клик по затемнению
-  dlg.addEventListener('close', () => {
-    if (form.dataset.sent !== '1') return;
-    form.reset(); form.dataset.sent = ''; form.querySelector('.form__status').hidden = true;
-  });
 })();
 
 /* ── Картинка не загрузилась: прячем её, остаётся фон карточки ── */
@@ -518,13 +546,32 @@ function certState(f) {
 })();
 
 /* ── Абонементы: калькулятор ── */
+const abonPrices = {
+  standard: {
+    30: { 6: 10800, 12: 21120, 18: 29520 },
+    45: { 6: 14580, 12: 28512, 18: 39852 },
+    60: { 6: 18900, 12: 36960, 18: 51660 },
+    90: { 6: 24300, 12: 47520, 18: 66420 },
+    120: { 6: 32400, 12: 63360, 18: 88560 }
+  },
+  morning: {
+    30: { 6: 10440, 12: 20160, 18: 28080 },
+    45: { 6: 14094, 12: 27216, 18: 37908 },
+    60: { 6: 18270, 12: 35280, 18: 49140 },
+    90: { 6: 23490, 12: 45360, 18: 63180 },
+    120: { 6: 31320, 12: 60480, 18: 84240 }
+  }
+};
 function abonState(f) {
   const d = f.querySelector('[name=dur]:checked');
   const c = f.querySelector('[name=cnt]:checked');
-  const minutes = Number(d.value), n = Number(c.value), pct = Number(c.dataset.pct);
+  const kind = f.querySelector('[name=kind]:checked').value;
+  const minutes = Number(d.value), n = Number(c.value);
   const old = Number(d.dataset.single) * n;
-  const total = Math.round(old * (100 - pct) / 100);
-  return { minutes, n, pct, old, total, per: Math.round(total / n), save: old - total };
+  const total = abonPrices[kind][minutes][n];
+  const pct = Math.round((old - total) / old * 100);
+  const kindLabel = kind === 'morning' ? 'Утренний' : 'Обычный';
+  return { kind, kindLabel, minutes, n, pct, old, total, per: Math.round(total / n), save: old - total };
 }
 (function abonBuilder() {
   const f = document.querySelector('[data-abon]');
@@ -533,8 +580,12 @@ function abonState(f) {
   const money = (v) => Number(v).toLocaleString('ru-RU').replace(/\u00a0/g, ' ') + ' ₽';
   function update() {
     const s = abonState(f);
+    const discounts = s.kind === 'morning' ? { 6: 13, 12: 16, 18: 22 } : { 6: 10, 12: 12, 18: 18 };
+    f.querySelectorAll('[name=cnt]').forEach((input) => {
+      input.closest('label').querySelector('[data-discount]').textContent = `скидка ${discounts[input.value]}%`;
+    });
     q('[data-total]').textContent = money(s.total);
-    q('[data-line-plan]').textContent = `${s.minutes} минут, ${s.n} сеансов`;
+    q('[data-line-plan]').textContent = `${s.kindLabel}: ${s.minutes} минут, ${s.n} сеансов`;
     q('[data-line-per]').textContent = `${money(s.per)} за сеанс`;
     q('[data-line-old]').textContent = `Без абонемента — ${money(s.old)}`;
     q('[data-line-save]').textContent = `Выгода — ${money(s.save)} (${s.pct}%)`;
