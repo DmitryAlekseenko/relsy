@@ -454,7 +454,7 @@ document.querySelectorAll('[data-form]').forEach((form) => {
     const pc = a.closest('.price-card');
     if (pc) {
       const planLabel = `Абонемент ${txt(pc.querySelector('h3'))}`;
-      const plans = [...pc.querySelectorAll('dl > div')].map((row) => [txt(row.querySelector('dt')), txt(row.querySelector('dd'))]);
+      const plans = [...pc.querySelectorAll('dl > div')].map((row) => [txt(row.querySelector('dt')), txt(row.querySelector('dd b') || row.querySelector('dd'))]);
       const label = `${planLabel}: ${plans[0][0]}`;
       return { rows: [[label, plans[0][1]]], wish: label, title: 'Заявка на абонемент', plans, planLabel };
     }

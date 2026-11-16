@@ -76,6 +76,8 @@ body.ab-new{background:#fff}
 .ab-new .ab-rate-row dl div{display:flex;flex-direction:column;gap:5px;padding:0;border:0}
 .ab-new .ab-rate-row dt{font-size:11px;color:var(--gray)}
 .ab-new .ab-rate-row dd{font-size:17px;color:var(--teal)}
+.ab-new .ab-rate-row dd b{font-weight:600}
+.ab-new .ab-rate-row dd small{display:block;font-size:11px;line-height:1.35;color:var(--gray);white-space:nowrap}
 .ab-new .ab-rate-row .btn{align-self:center;margin:0;padding:13px 18px;font-size:12px}
 .ab-new .ab-rates__foot{display:flex;justify-content:space-between;gap:20px;margin-top:22px;font-size:12px}
 .ab-new .ab-share{display:grid;grid-template-columns:1.02fr .98fr;gap:56px;align-items:center}

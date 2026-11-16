@@ -12,10 +12,12 @@
       const minutes = Number(row.dataset.rateRow);
       const prices = abonPrices[kind][minutes];
       row.querySelectorAll('[data-count]').forEach((cell) => {
-        cell.textContent = money(prices[Number(cell.dataset.count)]);
+        const count = Number(cell.dataset.count);
+        const total = prices[count];
+        cell.innerHTML = `<b>${money(total)}</b><small>${money(Math.round(total / count))} за сеанс</small>`;
       });
       row.querySelector('h3').textContent = `${minutes} минут${kind === 'morning' ? ' · утро' : ''}`;
-      row.querySelector('[data-rate-per]').textContent = `от ${money(Math.round(prices[18] / 18))} за сеанс`;
+      row.querySelector('[data-rate-per]').textContent = 'Цена за сеанс — под каждым пакетом';
     });
     rateNote.textContent = kind === 'morning'
       ? 'Утренний абонемент действует по будням с 9:00 до 15:00 по местному времени. Скидка до 22%.'
